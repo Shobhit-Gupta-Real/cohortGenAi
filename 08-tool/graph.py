@@ -11,6 +11,12 @@ load_dotenv()
 llm = init_chat_model(model_provider="openai", model="gpt-4.1-nano")
 
 
+@tool()
+def add_two_numbers(a: int, b: int):
+    """This tool will add two numbers"""
+    return a + b
+
+
 @tool()  # here we have given to decorator of the tool to our tool function
 def get_weather(city: str):
     """This tool returns the weater data about the give city."""
@@ -21,7 +27,7 @@ def get_weather(city: str):
     return "Something went wrong"
 
 
-tools_available = [get_weather]
+tools_available = [get_weather, add_two_numbers]
 llm_with_tools = llm.bind_tools(tools_available)
 
 
@@ -39,7 +45,7 @@ graph_builder = StateGraph(State)
 graph_builder.add_node("chatbot", chatbot)
 graph_builder.add_edge(START, "chatbot")
 graph_builder.add_edge("chatbot", END)
-tool_node = ToolNode(tools=[get_weather])
+tool_node = ToolNode(tools=tools_available)
 graph_builder.add_node("tools", tool_node)
 graph_builder.add_conditional_edges(
     "chatbot",
