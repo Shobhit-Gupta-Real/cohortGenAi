@@ -39,15 +39,25 @@ graph_builder = StateGraph(State)
 graph_builder.add_node("chatbot", chatbot)
 graph_builder.add_edge(START, "chatbot")
 graph_builder.add_edge("chatbot", END)
+tool_node = ToolNode(tools=[get_weather])
+graph_builder.add_node("tools", tool_node)
+graph_builder.add_conditional_edges(
+    "chatbot",
+    tools_condition
+)
+graph_builder.add_edge("tools", "chatbot")
 
 grpah = graph_builder.compile()
 
 
 def main():
     user_query = input(">")
-    grpah.invoke({
-        "messages": [{"role": "user", "content": user_query}]
-    })
+    state = State(
+        messages=[{"role": "user", "content": user_query}]
+    )
+    for event in grpah.stream(state, stream_mode="values"):
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
 
 
 main()
