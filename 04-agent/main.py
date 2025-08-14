@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
-from openai import OpenAI
+# from openai import OpenAI
 from json import dumps
+from langfuse.openai import OpenAI
 
 load_dotenv()
 client = OpenAI()
@@ -54,39 +55,6 @@ response = client.chat.completions.create(
         {
             "role": "user",
             "content": "What's the weather like in New York?"
-        },
-        {
-            "role": "assistant",
-            "content": dumps({
-                "step": "plan",
-                "content": "the user is interested in the weather data of new york",
-                "function": None,
-                "input": None
-            })
-        },
-        {
-            "role": "assistant",
-            "content": dumps({
-                "step": "plan",
-                "content": "from available tools, i should get the get_weather('New York') tool to get the weather data",
-                "function": None,
-                "input": None
-            })
-        },
-        {
-            "role": "assistant",
-            "content": dumps({
-                "step": "action",
-                "function": "get_weather",
-                "input": "New York"
-            })
-        },
-        {
-            "role": "user",
-            "content": dumps({
-                "step": "observe",
-                "content": "-10 degree celsius"
-            })
         }
     ]
 )

@@ -30,7 +30,15 @@ config = {
             "host": "vector-db",
             "port": "6333"
         }
-    }
+    },
+    "graph_store": {
+        "provider": "neo4j",
+        "config": {
+            "url": "bolt://neo4j:7687",
+            "username": "neo4j",
+            "password": "reform-william-center-vibrate-press-5829"
+        }
+    },
 }
 
 mem_client = Memory.from_config(config)
